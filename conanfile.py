@@ -26,9 +26,9 @@ def replace_in_file(file_path, search, replace):
 
 class OpenSSLConan(ConanFile):
     name = "OpenSSL"
-    version = "1.0.2i"
+    version = "1.0.2h"
     settings = "os", "compiler", "arch", "build_type"
-    url="http://github.com/lasote/conan-openssl"
+    url="http://github.com/anonymouzz/conan-openssl"
     # https://github.com/openssl/openssl/blob/OpenSSL_1_0_2c/INSTALL
     options = {"no_threads": [True, False],
                "no_electric_fence": [True, False],
@@ -70,7 +70,7 @@ class OpenSSLConan(ConanFile):
             tools.download(self.source_tgz, "openssl.tar.gz")
             tools.unzip("openssl.tar.gz", ".")
 
-        tools.check_sha256("openssl.tar.gz", "9287487d11c9545b6efb287cdb70535d4e9b284dd10d51441d9b9963d000de6f")
+        tools.check_sha256("openssl.tar.gz", "1d4007e53aad94a5b2002fe045ee7bb0b3d98f1a47f8b2bc851dcd1c74332919")
         os.unlink("openssl.tar.gz")
 
     def config(self):
@@ -83,14 +83,14 @@ class OpenSSLConan(ConanFile):
         if not self.options.no_electric_fence and self.settings.os == "Linux":
             private = False if self.options.shared else True
             if self.counter_config==2:
-                self.requires.add("electric-fence/2.2.0@lasote/stable", private=private)
+                self.requires.add("electric-fence/2.2.0@anonymouz/stable", private=private)
             self.options["electric-fence"].shared = self.options.shared
         else:
             if "electric-fence" in self.requires:
                 del self.requires["electric-fence"]
 
         if not self.options.no_zlib:
-            self.requires.add("zlib/1.2.8@lasote/stable", private=False)
+            self.requires.add("zlib/1.2.8@anonymouz/stable", private=False)
             self.options["zlib"].shared = self.options.zlib_dynamic
 
         else:
@@ -100,7 +100,7 @@ class OpenSSLConan(ConanFile):
     @property
     def subfolder(self):
         return "openssl-%s" % self.version
-    
+
     def build(self):
         '''
             For Visual Studio (tried with 2010) compiling need:
@@ -211,7 +211,7 @@ class OpenSSLConan(ConanFile):
             for old, new in renames.iteritems():
                 if os.path.exists(old):
                     os.rename(old, new)
-        
+
         def mingw_make(config_options_string):
             # NOT WORKING, PLEASE, ANY HELP WOULD BE GREAT.
             # WITH THE MSYS TOOLS IN THE PATH IT RUNS MAKE BUT IT FAILS
